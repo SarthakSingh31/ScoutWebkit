@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import java.util.*
 
@@ -33,16 +34,14 @@ class MainActivity : FragmentActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-    }
 
-    fun addAnotherView(id : Int, turboWebViewFragments : Stack<TurboWebViewFragment>) {
-        runOnUiThread(Runnable {
-            supportFragmentManager.beginTransaction().replace(id, turboWebViewFragments.peek()).commit()
-        })
+        /**
+         * TODO: Switch to Fragment(webview inside a SwipeRefresh) inside Fragment(ViewPager) inside ViewPager
+         */
     }
 
     override fun onBackPressed() {
-        supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.enter_right, R.anim.exit_left).replace(R.id.discover_page, TurboWebViewFragment("https://scout-test.s.uw.edu/h/seattle/food/", findViewById(R.id.discover_page))).commit()
-        //super.onBackPressed()
+        if (!findViewById<WebPageNavigator>(R.id.discover_page).backPressHandler())
+            super.onBackPressed()
     }
 }

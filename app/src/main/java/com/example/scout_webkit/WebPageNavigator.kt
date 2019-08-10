@@ -32,7 +32,28 @@ class WebPageNavigator : FrameLayout {
     }
 
     fun addAnotherView (url : String) {
-        turboWebViewFragments.push(TurboWebViewFragment(url, this))
-        parentFragmentActivity.addAnotherView(id, turboWebViewFragments)
+        parentFragmentActivity.runOnUiThread(Runnable {
+            //var saveState = supportFragmentManager.saveFragmentInstanceState(supportFragmentManager.fragments[turboWebViewFragments.size - 2])
+            parentFragmentActivity.supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.enter_right, R.anim.exit_left).detach(turboWebViewFragments.peek()).addToBackStack(null).commit()
+            turboWebViewFragments.push(TurboWebViewFragment(url, this))
+            parentFragmentActivity.supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.enter_right, R.anim.exit_left).add(id, turboWebViewFragments.peek()).addToBackStack(null).commit()
+            //supportFragmentManager.fragments[turboWebViewFragments.size - 2].setInitialSavedState(saveState)
+        })
+    }
+
+    fun backPressHandler() : Boolean {
+        if (turboWebViewFragments.size > 1) {
+            parentFragmentActivity.runOnUiThread(Runnable {
+                parentFragmentActivity.supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).remove(turboWebViewFragments.peek())
+                    .commit()
+                turboWebViewFragments.pop()
+                parentFragmentActivity.supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).attach(turboWebViewFragments.peek())
+                    .commit()
+            })
+            return true
+        }
+        return false
     }
 }

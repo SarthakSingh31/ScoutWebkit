@@ -22,7 +22,13 @@ class TurboWebViewFragment : Fragment {
         this.parentNavigator = parentNavigator
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("TurboWebViewFragment", "onCreateView: $savedInstanceState")
         return inflater.inflate(R.layout.webview_layout, container, false)
     }
 
@@ -31,20 +37,21 @@ class TurboWebViewFragment : Fragment {
 
         webView = view as WebView
         webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
         webView.loadUrl(startUrl)
-        //webView.addJavascriptInterface(JavaScriptBridge(), "TurboBridge")
-        //webView.webViewClient = TurboWebViewClient()
-        //webView.webChromeClient = CustomWebChromeClient()
+        webView.addJavascriptInterface(JavaScriptBridge(), "TurboBridge")
+        webView.webViewClient = TurboWebViewClient()
+        webView.webChromeClient = CustomWebChromeClient()
     }
 
     override fun onResume() {
-        //webView.onResume()
         super.onResume()
+        webView.onResume()
     }
 
     override fun onPause() {
-        //webView.onPause()
         super.onPause()
+        webView.onPause()
     }
 
     private inner class JavaScriptBridge {
