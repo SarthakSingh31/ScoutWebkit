@@ -1,27 +1,49 @@
 package com.example.scout_webkit
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import java.util.*
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var webPageNavigators: Array<WebPageNavigator>
+    private var currWebViewIndex: Int = 0
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
-
+            R.id.discover_button -> {
+                if (currWebViewIndex != 0) {
+                    webPageNavigators[currWebViewIndex].visibility = View.GONE
+                    currWebViewIndex = 0
+                    webPageNavigators[currWebViewIndex].visibility = View.VISIBLE
+                }
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-
+            R.id.food_button -> {
+                if (currWebViewIndex != 1) {
+                    webPageNavigators[currWebViewIndex].visibility = View.GONE
+                    currWebViewIndex = 1
+                    webPageNavigators[currWebViewIndex].visibility = View.VISIBLE
+                }
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
+            R.id.study_button -> {
+                if (currWebViewIndex != 2) {
+                    webPageNavigators[currWebViewIndex].visibility = View.GONE
+                    currWebViewIndex = 2
+                    webPageNavigators[currWebViewIndex].visibility = View.VISIBLE
+                }
+                return@OnNavigationItemSelectedListener true
+            }
 
+            R.id.tech_button -> {
+                if (currWebViewIndex != 3) {
+                    webPageNavigators[currWebViewIndex].visibility = View.GONE
+                    currWebViewIndex = 3
+                    webPageNavigators[currWebViewIndex].visibility = View.VISIBLE
+                }
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -34,14 +56,23 @@ class MainActivity : FragmentActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-
-        /**
-         * TODO: Switch to Fragment(webview inside a SwipeRefresh) inside Fragment(ViewPager) inside ViewPager
-         */
+        webPageNavigators  = arrayOf(
+            findViewById(R.id.discover_page),
+            findViewById(R.id.food_page),
+            findViewById(R.id.study_page),
+            findViewById(R.id.tech_page)
+        )
+        title = ""
     }
 
     override fun onBackPressed() {
-        if (!findViewById<WebPageNavigator>(R.id.discover_page).backPressHandler())
+        if (!webPageNavigators[currWebViewIndex].backPressHandler())
             super.onBackPressed()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_bar, menu)
+        super.onCreateOptionsMenu(menu)
+        return true
     }
 }
