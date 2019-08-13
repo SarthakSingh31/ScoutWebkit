@@ -10,6 +10,7 @@ import android.webkit.*
 import androidx.fragment.app.Fragment
 import android.app.Activity
 import android.net.Uri
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 
@@ -42,7 +43,7 @@ class TurboWebViewFragment : Fragment {
         super.onViewCreated(view, savedInstanceState)
 
         if (fragmentView == null) {
-            webView = (view as ViewGroup).getChildAt(1) as WebView
+            webView = view.findViewById(R.id.webView)
             webView.settings.javaScriptEnabled = true
             webView.settings.domStorageEnabled = true
             webView.loadUrl(startUrl)
@@ -72,7 +73,6 @@ class TurboWebViewFragment : Fragment {
     }
 
     private inner class JavaScriptBridge {
-
         @JavascriptInterface
         fun visitProposedToLocationWithAction(location: String, action: String) {
             Log.d("JavaScriptBridge", "visitProposedToLocationWithAction: $location")

@@ -8,32 +8,37 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
-                                               android:id="@+id/discover_page"
-                                               app:startUrl="https://scout-test.s.uw.edu/h/seattle/">
-    </com.example.scout_webkit.WebPageNavigator>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="0dp"
+                 app:layout_constraintBottom_toTopOf="@+id/nav_view"
+                 app:layout_constraintTop_toTopOf="parent">
+        <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:id="@+id/discover_page"
+                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/">
+        </com.example.scout_webkit.WebPageNavigator>
 
-    <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
-                                               android:id="@+id/food_page"
-                                               app:startUrl="https://scout-test.s.uw.edu/h/seattle/food/"
-                                               android:visibility="gone">
-    </com.example.scout_webkit.WebPageNavigator>
+        <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:id="@+id/food_page"
+                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/food/"
+                                                   android:visibility="gone">
+        </com.example.scout_webkit.WebPageNavigator>
 
-    <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
-                                               android:id="@+id/study_page"
-                                               app:startUrl="https://scout-test.s.uw.edu/h/seattle/study/"
-                                               android:visibility="gone">
-    </com.example.scout_webkit.WebPageNavigator>
+        <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:id="@+id/study_page"
+                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/study/"
+                                                   android:visibility="gone">
+        </com.example.scout_webkit.WebPageNavigator>
 
-    <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
-                                               android:layout_height="match_parent"
-                                               android:id="@+id/tech_page"
-                                               app:startUrl="https://scout-test.s.uw.edu/h/seattle/tech/"
-                                               android:visibility="gone">
-    </com.example.scout_webkit.WebPageNavigator>
+        <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:id="@+id/tech_page"
+                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/tech/"
+                                                   android:visibility="gone">
+        </com.example.scout_webkit.WebPageNavigator>
+    </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
