@@ -99,6 +99,14 @@ class MainActivity : AppCompatActivity() {
                 onBackPressed()
                 true
             }
+            R.id.action_campus -> {
+                showCampusChooser()
+                true
+            }
+            R.id.action_filter -> {
+
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

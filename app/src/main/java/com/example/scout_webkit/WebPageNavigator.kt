@@ -83,19 +83,10 @@ class WebPageNavigator : FrameLayout {
     }
 
     private fun getCampusURL(): String {
-        val campusOptions : Array<String> = arrayOf("Seattle", "Bothell", "Tacoma")
         val campus: String
 
         val sharedPref = parentFragmentActivity.getPreferences(Context.MODE_PRIVATE)
-        campus = if (!sharedPref.contains("campus")) {
-            with(sharedPref.edit()) {
-                putInt("campus", 0)
-                apply()
-            }
-            campusOptions[0]
-        } else {
-            campusOptions[sharedPref.getInt("campus", -1)]
-        }
+        campus = sharedPref.getString("selectedCampus", "Seattle")!!
 
         return "https://scout-test.s.uw.edu/h/" + campus.toLowerCase() + "/"
     }
