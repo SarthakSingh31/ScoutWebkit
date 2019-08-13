@@ -14,11 +14,6 @@ class CustomSwipeRefreshLayout : SwipeRefreshLayout {
         }
     }
 
-    override fun onFinishInflate() {
-        findViewById<FloatingActionButton>(R.id.filter_submit).hide()
-        super.onFinishInflate()
-    }
-
     override fun canChildScrollUp(): Boolean {
         return findViewById<WebView>(R.id.webView).scrollY != 0
     }

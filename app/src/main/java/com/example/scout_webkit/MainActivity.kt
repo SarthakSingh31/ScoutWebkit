@@ -1,10 +1,14 @@
 package com.example.scout_webkit
 
+import android.content.Context
+import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
@@ -12,6 +16,7 @@ import androidx.core.app.NavUtils
 
 
 class MainActivity : AppCompatActivity() {
+    private val CAMPUS_OPTIONS : Array<String> = arrayOf("Seattle", "Bothell", "Tacoma")
     private lateinit var webPageNavigators: Array<WebPageNavigator>
     private var currWebViewIndex: Int = 0
 
@@ -60,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
         webPageNavigators  = arrayOf(
             findViewById(R.id.discover_page),
             findViewById(R.id.food_page),
@@ -88,12 +94,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun showCampusChooser() {
+        var defaultCampus = 0
+
+        val sharedPreferences: SharedPreferences = getPreferences(Context.MODE_PRIVATE)
+        if (sharedPreferences.contains("selectedCampus"))
+            defaultCampus = CAMPUS_OPTIONS.indexOf(sharedPreferences.getString("selectedCampus", null))
+
+        val alertBuilder: AlertDialog.Builder = AlertDialog.Builder(this)
+        alertBuilder.setTitle("Select a Campus")
+        alertBuilder.setSingleChoiceItems(CAMPUS_OPTIONS, defaultCampus) { dialogInterface: DialogInterface, i: Int ->
+            with (sharedPreferences.edit()) {
+                if (sharedPreferences.contains("selectedCampus")) {
+                    remove("selectedCampus")
+                }
+                putString("selectedCampus", CAMPUS_OPTIONS[i])
+                apply()
+            }
+
+            webPageNavigators.forEach { it.hardReloadWebPage() }
+            dialogInterface.dismiss()
+        }
+
+        alertBuilder.create().show()
     }
 }

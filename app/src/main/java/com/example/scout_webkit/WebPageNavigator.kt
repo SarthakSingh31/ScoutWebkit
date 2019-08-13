@@ -1,23 +1,18 @@
 package com.example.scout_webkit
 
 import android.content.Context
-import android.graphics.Rect
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 class WebPageNavigator : FrameLayout {
     private var parentFragmentActivity : AppCompatActivity
-    private var startUrl : String
+    private var subUrl : String
 
-    var turboWebViewFragments : Stack<TurboWebViewFragment>
+    private var turboWebViewFragments : Stack<TurboWebViewFragment>
 
     constructor(context : Context, attrs : AttributeSet) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
@@ -26,7 +21,7 @@ class WebPageNavigator : FrameLayout {
             0, 0
         )
         try {
-            startUrl = a.getString(R.styleable.WebPageNavigator_startUrl)!!
+            subUrl = a.getString(R.styleable.WebPageNavigator_subUrl)!!
         } finally {
             a.recycle()
         }
@@ -51,7 +46,7 @@ class WebPageNavigator : FrameLayout {
                 parentFragmentActivity.supportFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).replace(id ,turboWebViewFragments.peek())
                     .commit()
-                parentFragmentActivity.title = turboWebViewFragments.peek().getTitle()
+                parentFragmentActivity.invalidateOptionsMenu()
             }
             return true
         }
@@ -62,9 +57,8 @@ class WebPageNavigator : FrameLayout {
         super.onVisibilityChanged(changedView, visibility)
         if (changedView is WebPageNavigator) {
             parentFragmentActivity.invalidateOptionsMenu()
-
             if (visibility == View.VISIBLE && turboWebViewFragments.size < 1) {
-                turboWebViewFragments.push(TurboWebViewFragment(startUrl, this))
+                turboWebViewFragments.push(TurboWebViewFragment(getCampusURL() + subUrl, this))
                 parentFragmentActivity.supportFragmentManager.beginTransaction()
                     .add(id, turboWebViewFragments.peek())
                     .commit()
@@ -74,8 +68,35 @@ class WebPageNavigator : FrameLayout {
 
     fun updateActionBar(menu: Menu) {
         parentFragmentActivity.title = turboWebViewFragments.peek().getTitle()
+
         if (turboWebViewFragments.size > 1)
             parentFragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        else
+            parentFragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
 
+    fun hardReloadWebPage() {
+        val initialVisibility = visibility
+        visibility = View.GONE
+        turboWebViewFragments.clear()
+        visibility = initialVisibility
+    }
+
+    private fun getCampusURL(): String {
+        val campusOptions : Array<String> = arrayOf("Seattle", "Bothell", "Tacoma")
+        val campus: String
+
+        val sharedPref = parentFragmentActivity.getPreferences(Context.MODE_PRIVATE)
+        campus = if (!sharedPref.contains("campus")) {
+            with(sharedPref.edit()) {
+                putInt("campus", 0)
+                apply()
+            }
+            campusOptions[0]
+        } else {
+            campusOptions[sharedPref.getInt("campus", -1)]
+        }
+
+        return "https://scout-test.s.uw.edu/h/" + campus.toLowerCase() + "/"
     }
 }

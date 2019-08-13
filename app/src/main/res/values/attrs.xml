@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="WebPageNavigator">
-        <attr name="startUrl" format="string"/>
+        <attr name="subUrl" format="string"/>
     </declare-styleable>
 </resources>

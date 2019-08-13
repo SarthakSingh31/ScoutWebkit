@@ -15,27 +15,27 @@
         <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/discover_page"
-                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/">
+                                                   app:subUrl="">
         </com.example.scout_webkit.WebPageNavigator>
 
         <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/food_page"
-                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/food/"
+                                                   app:subUrl="food/"
                                                    android:visibility="gone">
         </com.example.scout_webkit.WebPageNavigator>
 
         <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/study_page"
-                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/study/"
+                                                   app:subUrl="study/"
                                                    android:visibility="gone">
         </com.example.scout_webkit.WebPageNavigator>
 
         <com.example.scout_webkit.WebPageNavigator android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/tech_page"
-                                                   app:startUrl="https://scout-test.s.uw.edu/h/seattle/tech/"
+                                                   app:subUrl="tech/"
                                                    android:visibility="gone">
         </com.example.scout_webkit.WebPageNavigator>
     </FrameLayout>
