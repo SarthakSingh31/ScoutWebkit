@@ -1,15 +1,23 @@
 package com.example.scout_webkit
 
 import android.content.Context
+import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.AttributeSet
+import android.view.Menu
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
 class WebPageNavigator : FrameLayout {
-    private var parentFragmentActivity : MainActivity
-    private var turboWebViewFragments : Stack<TurboWebViewFragment>
+    private var parentFragmentActivity : AppCompatActivity
     private var startUrl : String
+
+    var turboWebViewFragments : Stack<TurboWebViewFragment>
 
     constructor(context : Context, attrs : AttributeSet) : super(context, attrs) {
         val a = context.theme.obtainStyledAttributes(
@@ -31,19 +39,17 @@ class WebPageNavigator : FrameLayout {
     fun addAnotherView (url : String) {
         parentFragmentActivity.runOnUiThread {
             turboWebViewFragments.push(TurboWebViewFragment(url, this))
-            parentFragmentActivity.supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.enter_right, R.anim.exit_left).replace(id, turboWebViewFragments.peek()).addToBackStack(null).commit()
+            parentFragmentActivity.supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.enter_right, R.anim.exit_left).replace(id, turboWebViewFragments.peek()).commit()
+            parentFragmentActivity.invalidateOptionsMenu()
         }
     }
 
     fun backPressHandler() : Boolean {
         if (turboWebViewFragments.size > 1) {
             parentFragmentActivity.runOnUiThread {
-                parentFragmentActivity.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).remove(turboWebViewFragments.peek())
-                    .commit()
                 turboWebViewFragments.pop()
                 parentFragmentActivity.supportFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).add(id ,turboWebViewFragments.peek())
+                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right).replace(id ,turboWebViewFragments.peek())
                     .commit()
                 parentFragmentActivity.title = turboWebViewFragments.peek().getTitle()
             }
@@ -55,37 +61,21 @@ class WebPageNavigator : FrameLayout {
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         if (changedView is WebPageNavigator) {
-            if (visibility == View.GONE) {
-                if (turboWebViewFragments.size > 0) {
-                    parentFragmentActivity.supportFragmentManager.beginTransaction()
-                        .remove(turboWebViewFragments.peek())
-                        .commit()
-                }
-                parentFragmentActivity.title = ""
-            } else if (visibility == View.VISIBLE) {
-                if (turboWebViewFragments.size > 0) {
-                    parentFragmentActivity.supportFragmentManager.beginTransaction().add(
-                        id,
-                        turboWebViewFragments.peek()
-                    ).commit()
-                    parentFragmentActivity.title = turboWebViewFragments.peek().getTitle()
-                }
-                else {
-                    turboWebViewFragments.push(TurboWebViewFragment(startUrl, this))
-                    parentFragmentActivity.supportFragmentManager.beginTransaction()
-                        .add(id, turboWebViewFragments.peek())
-                        .commit()
-                }
+            parentFragmentActivity.invalidateOptionsMenu()
+
+            if (visibility == View.VISIBLE && turboWebViewFragments.size < 1) {
+                turboWebViewFragments.push(TurboWebViewFragment(startUrl, this))
+                parentFragmentActivity.supportFragmentManager.beginTransaction()
+                    .add(id, turboWebViewFragments.peek())
+                    .commit()
             }
         }
     }
 
-    private fun resetActionBar() {
-        parentFragmentActivity.title = ""
-        parentFragmentActivity
-    }
-
-    private fun updateActionBar() {
+    fun updateActionBar(menu: Menu) {
         parentFragmentActivity.title = turboWebViewFragments.peek().getTitle()
+        if (turboWebViewFragments.size > 1)
+            parentFragmentActivity.supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
     }
 }

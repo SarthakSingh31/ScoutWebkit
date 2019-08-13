@@ -3,9 +3,13 @@ package com.example.scout_webkit
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NavUtils
+
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webPageNavigators: Array<WebPageNavigator>
@@ -74,5 +78,22 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.top_bar, menu)
         super.onCreateOptionsMenu(menu)
         return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (menu != null) {
+            webPageNavigators[currWebViewIndex].updateActionBar(menu)
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 }

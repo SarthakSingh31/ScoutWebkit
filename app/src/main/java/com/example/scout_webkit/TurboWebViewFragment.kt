@@ -65,7 +65,10 @@ class TurboWebViewFragment : Fragment {
     }
 
     fun getTitle(): String {
-        return webView.title
+        return if (::webView.isInitialized)
+            webView.title
+        else
+            ""
     }
 
     private inner class JavaScriptBridge {
